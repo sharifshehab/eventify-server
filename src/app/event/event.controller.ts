@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Event } from "./event.model";
 
+// add new event
 const createEvent = async (req: Request, res: Response) => {
     try {
         const event = await Event.create(req.body);
@@ -10,6 +11,27 @@ const createEvent = async (req: Request, res: Response) => {
     }
 }
 
+// get all events
+const getEvents = async (req: Request, res: Response) => {
+    try {
+        const searchValue = req.query.search;
+        console.log(searchValue);
+        
+        let search = {};
+        if (typeof searchValue === 'string' && searchValue.trim() !== '') {
+            search = {
+                title: { $regex: searchValue, $options: "i" }            
+            };
+        }
+
+        const events = await Event.find(search);
+        res.status(200).send(events);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+// get user events
 const getUsersEvent = async (req: Request, res: Response) => {
     try {
         const events = await Event.find({organizer: req.params.userEmail});
@@ -19,6 +41,7 @@ const getUsersEvent = async (req: Request, res: Response) => {
     }
 }
 
+// delete event
 const deleteEvent = async (req: Request, res: Response) => {
     try {
         const event = await Event.findByIdAndDelete(req.params.eventId);
@@ -28,6 +51,7 @@ const deleteEvent = async (req: Request, res: Response) => {
     }
 }
 
+// get single event by "id"
 const singleEvent = async (req: Request, res: Response) => {
     try {
         const event = await Event.findById(req.params.eventId);
@@ -37,7 +61,8 @@ const singleEvent = async (req: Request, res: Response) => {
     }
 }
 
-const editEvent = async (req: Request, res: Response) => {
+// update event
+const updateEvent = async (req: Request, res: Response): Promise<any> => {
     try {
         const updatedEvent = await Event.findByIdAndUpdate(req.params.eventId, req.body, {
             new: true,
@@ -57,8 +82,9 @@ const editEvent = async (req: Request, res: Response) => {
 
 export const eventController = {
     createEvent,
+    getEvents,
     getUsersEvent,
     deleteEvent,
     singleEvent,
-    editEvent
+    updateEvent
 };
