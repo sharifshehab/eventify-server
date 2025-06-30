@@ -15,16 +15,23 @@ const createEvent = async (req: Request, res: Response) => {
 const getEvents = async (req: Request, res: Response) => {
     try {
         const searchValue = req.query.search;
-        console.log(searchValue);
-        
-        let search = {};
+        const dateValue = req.query.date;
+        // console.log(date);
+
+        let query = {};
         if (typeof searchValue === 'string' && searchValue.trim() !== '') {
-            search = {
+            query = {
                 title: { $regex: searchValue, $options: "i" }            
             };
         }
+        if (dateValue) {
+            query = {
+                dateTime: dateValue
+            };
+        }
 
-        const events = await Event.find(search);
+        const events = await Event.find(query);
+
         res.status(200).send(events);
     } catch (err) {
         res.status(400).send(err);
