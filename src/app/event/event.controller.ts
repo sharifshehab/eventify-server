@@ -16,7 +16,6 @@ const getEvents = async (req: Request, res: Response) => {
     try {
         const searchValue = req.query.search;
         const dateValue = req.query.date;
-        // console.log(date);
 
         let query = {};
         if (typeof searchValue === 'string' && searchValue.trim() !== '') {
@@ -87,11 +86,47 @@ const updateEvent = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
+// event attend count
+const updateEventAttendeeCount= async (req: Request, res: Response): Promise<any> => {
+    try {
+        const userEmail = req.body.organizer;
+        const {eventId} = req.params;
+        const checkUser = await Event.findOne({ attendees: userEmail, _id: eventId })
+        if (checkUser) {
+            return res.status(400).send({
+                message: "already attending",
+                success: false
+            })
+        }
+        
+        const updatedEvent = await Event.findByIdAndUpdate(eventId,
+        {
+            $push: { attendees: userEmail },
+            $inc: { AttendeeCount: 1 }
+        },
+        {
+            new: true,
+            runValidators: true
+        }
+        );
+        if (!updatedEvent) {
+            return res.status(400).send({
+                message: "Update failed",
+                success: false
+            })
+        }
+        res.status(200).send(updatedEvent);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
 export const eventController = {
     createEvent,
     getEvents,
     getUsersEvent,
     deleteEvent,
     singleEvent,
-    updateEvent
+    updateEvent,
+    updateEventAttendeeCount
 };

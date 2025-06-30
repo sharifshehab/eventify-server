@@ -29,6 +29,10 @@ const eventSchema = new Schema<IEvent>(
         },
         organizer: {
             type: String,
+        },
+        attendees: {
+            type: [String],
+            default: []
         }
     },
     {

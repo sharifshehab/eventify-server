@@ -9,3 +9,4 @@ eventRoutes.get('/users-event/:userEmail', eventController.getUsersEvent);   // 
 eventRoutes.delete('/delete-event/:eventId', eventController.deleteEvent);  // delete an event
 eventRoutes.get('/event/:eventId', eventController.singleEvent);           // get single event by "id"
 eventRoutes.patch('/edit-event/:eventId', eventController.updateEvent);   // update event
+eventRoutes.patch('/event-attend/:eventId', eventController.updateEventAttendeeCount); // update event attend count

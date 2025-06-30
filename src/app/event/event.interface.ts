@@ -6,4 +6,5 @@ export interface IEvent{
     description: string;
     AttendeeCount: number;
     organizer: string;
+    attendees: string[]
 }
