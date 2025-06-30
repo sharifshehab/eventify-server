@@ -4,6 +4,6 @@ export interface IEvent{
     dateTime: string;
     location: string;
     description: string;
-    attendeeCount: number;
-    user: string;
+    AttendeeCount: number;
+    organizer: string;
 }

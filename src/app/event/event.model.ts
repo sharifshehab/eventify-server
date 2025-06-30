@@ -7,6 +7,10 @@ const eventSchema = new Schema<IEvent>(
             type: String,
             required: [true, 'Please provide event title'],
         },
+        name: {
+            type: String,
+            required: true,
+        },
         dateTime: {
             // type: Date,
             type: String,
@@ -20,10 +24,10 @@ const eventSchema = new Schema<IEvent>(
             type: String,
             required: [true, 'Please provide event description'],
         },
-        attendeeCount: {
+        AttendeeCount: {
             type: Number,
         },
-        user: {
+        organizer: {
             type: String,
         }
     },
