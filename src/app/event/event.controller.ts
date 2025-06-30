@@ -28,8 +28,37 @@ const deleteEvent = async (req: Request, res: Response) => {
     }
 }
 
+const singleEvent = async (req: Request, res: Response) => {
+    try {
+        const event = await Event.findById(req.params.eventId);
+        res.status(200).send(event);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+const editEvent = async (req: Request, res: Response) => {
+    try {
+        const updatedEvent = await Event.findByIdAndUpdate(req.params.eventId, req.body, {
+            new: true,
+            runValidators: true
+        });
+        if (!updatedEvent) {
+            return res.status(400).send({
+                message: "Update failed",
+                success: false
+            })
+        }
+        res.status(200).send(updatedEvent);
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
 export const eventController = {
     createEvent,
     getUsersEvent,
-    deleteEvent
+    deleteEvent,
+    singleEvent,
+    editEvent
 };
